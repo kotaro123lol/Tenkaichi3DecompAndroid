@@ -159,6 +159,8 @@
     <string name="refresh_auto">Automático</string>
     <string name="refresh_keep">Não mudar</string>
     <string name="refresh_rate_text">A taxa pedida à tela enquanto você joga. O jogo mostra 30 imagens por segundo na luta: numa tela a 90 ou 144 Hz algumas ficam mais tempo que outras e a imagem treme. Automático: 60 Hz, ou 120 Hz com movimento suave a 120. O sistema ainda pode escolher outra taxa. Vale na próxima vez que o jogo abrir.</string>
+    <string name="adpf">Dicas de desempenho (ADPF)</string>
+    <string name="adpf_text">O jogo diz ao Android quanto tempo cada imagem levou e quanto pode levar, para o processador acelerar antes de a luta engasgar e desacelerar quando sobra tempo (menos calor em sessões longas). Android 13 ou mais novo; nos outros não faz nada. O log diz se o sistema aceitou.</string>
     <string name="appearance">Aparência do app</string>
     <string name="theme">Tema</string>
     <string name="theme_dark">Escuro</string>

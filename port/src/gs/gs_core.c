@@ -1323,6 +1323,12 @@ void Port_GsVif1Chain(uint32_t tadr, int tte) {
         uint64_t waited = (uint64_t)gPortSleptNs;
         uint64_t work = t - start > waited ? t - start - waited : 0; /* without the waiting for the vertical blank */
         gPortSleptNs = 0;
+#ifdef __ANDROID__
+        {   /* the tick's work to Android's performance hints (adpf_android.c: the clocks raised before a tick runs late) */
+            extern void PortAdpf_Report(unsigned long long workNs);
+            PortAdpf_Report(work);
+        }
+#endif
         {   /* a frame over budget: where the time went and what was created in it */
             extern unsigned gGpuNewTex, gGpuNewTexPixels, gGpuNewPipes;
             extern uint64_t gGpuTexNs, gGpuPipeNs, gGpuEndNs;

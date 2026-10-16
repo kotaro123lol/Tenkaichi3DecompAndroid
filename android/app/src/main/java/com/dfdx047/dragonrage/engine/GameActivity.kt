@@ -58,6 +58,9 @@ class GameActivity : SDLActivity() {
     /** The screen's refresh rate while playing ([RefreshRate]; setting dr_refresh). */
     private var refresh: RefreshRate? = null
 
+    /** The device's heat in the game's log while it runs ([ThermalLog]; with perf_log). */
+    private var thermal: ThermalLog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         paths = GamePaths(this).also { it.ensure() }
         var refreshSetting = 0
@@ -72,6 +75,7 @@ class GameActivity : SDLActivity() {
             orientation = es.get(EngineSettings.ORIENTATION, 0)
             refreshSetting = es.get(EngineSettings.REFRESH, 0).coerceIn(0, 3)
             interp = es.get(EngineSettings.INTERP, 0)
+            if (es.get(EngineSettings.PERF_LOG, 1) != 0) thermal = ThermalLog(this)
         }
         requestedOrientation = orientationFlag()
         store = TouchStore(paths.root)
@@ -141,10 +145,12 @@ class GameActivity : SDLActivity() {
         super.onResume()
         pad?.let { it.config = store.load() }
         handler.post(watchMenu)
+        thermal?.start()
     }
 
     override fun onPause() {
         handler.removeCallbacks(watchMenu)
+        thermal?.stop()
         TouchBridge.setPad(0, 128, 128, 128, 128)
         super.onPause()
     }
