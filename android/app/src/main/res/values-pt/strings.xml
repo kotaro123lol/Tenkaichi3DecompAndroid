@@ -330,6 +330,7 @@
     <string name="gpu_opt_blur_far">Desfoque de distância desligado</string>
     <string name="gpu_opt_blur_move">Desfoque de movimento desligado</string>
     <string name="gpu_opt_filter">Filtro de tela bilinear (sem passada extra)</string>
+    <string name="gpu_opt_filter_gsr">Filtro de tela Snapdragon GSR (mais nítido numa tela grande)</string>
     <string name="frag_depth">Profundidade precisa</string>
     <string name="frag_depth_text">Sobreposição exata de superfícies no mesmo plano (cachoeiras, marcas no chão). Desligado é mais rápido em GPUs fracas, com uma piscada rara.</string>
     <string name="frame_skip">Pular quadros em vez de ficar lento</string>

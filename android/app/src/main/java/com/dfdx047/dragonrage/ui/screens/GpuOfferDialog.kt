@@ -31,7 +31,7 @@ fun GpuOfferDialog(vm: AppViewModel) {
         add(stringResource(R.string.gpu_opt_frameskip))
         if (offer.fxOffAdd and 16 != 0) add(stringResource(R.string.gpu_opt_blur_far))
         if (offer.fxOffAdd and 32 != 0) add(stringResource(R.string.gpu_opt_blur_move))
-        add(stringResource(R.string.gpu_opt_filter))
+        add(stringResource(if (offer.filter == 4) R.string.gpu_opt_filter_gsr else R.string.gpu_opt_filter))
     }
     AlertDialog(
         onDismissRequest = { vm.declineGpuOffer() },

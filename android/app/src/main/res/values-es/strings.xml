@@ -330,6 +330,7 @@
     <string name="gpu_opt_blur_far">Desenfoque de distancia apagado</string>
     <string name="gpu_opt_blur_move">Desenfoque de movimiento apagado</string>
     <string name="gpu_opt_filter">Filtro de pantalla bilineal (sin pasada extra)</string>
+    <string name="gpu_opt_filter_gsr">Filtro de pantalla Snapdragon GSR (más nítido en una pantalla grande)</string>
     <string name="frag_depth">Profundidad precisa</string>
     <string name="frag_depth_text">Superposición exacta de superficies en el mismo plano (cascadas, marcas en el suelo). Apagado es más rápido en GPUs débiles, con algún parpadeo raro.</string>
     <string name="frame_skip">Saltar cuadros en vez de ir lento</string>

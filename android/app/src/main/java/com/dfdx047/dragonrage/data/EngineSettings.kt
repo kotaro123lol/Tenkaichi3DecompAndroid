@@ -83,7 +83,7 @@ class EngineSettings(private val file: File) {
         const val ADPF = "dr_adpf"                // Android's performance hints for the game thread (port/src/gs/adpf_android.c): 1 on, 0 off
         const val GAME_STATE = "dr_game_state"    // the game's state (menus, fight, online fight) told to Android's Game Mode: 1 on, 0 off
         const val BG_PAUSE = "dr_bg_pause"        // the app in the background: 1 the engine pauses the game (online: only drawing stops; Vulkan), 0 SDL's way
-        const val PERF_LOG = "perf_log"         // the engine's speed lines (and the heat's) in bt3_log.txt: 1 on (default), 0 off
+        const val PERF_LOG = "perf_log"           // the engine's speed lines (and the heat's) in bt3_log.txt: 1 on (default), 0 off
 
         const val GLOW_DEFAULT = 60
         const val SCALE_DEFAULT = 2

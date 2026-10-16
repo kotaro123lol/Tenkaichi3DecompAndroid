@@ -331,6 +331,7 @@
     <string name="gpu_opt_blur_far">Distance blur off</string>
     <string name="gpu_opt_blur_move">Movement blur off</string>
     <string name="gpu_opt_filter">Bilinear screen filter (no extra pass)</string>
+    <string name="gpu_opt_filter_gsr">Snapdragon GSR screen filter (sharper on a large screen)</string>
     <string name="frag_depth">Precise depth</string>
     <string name="frag_depth_text">Exact overlap of surfaces in one plane (waterfalls, marks on the ground). Off is faster on weaker GPUs, with a rare flicker.</string>
     <string name="frame_skip">Skip pictures instead of slowing down</string>

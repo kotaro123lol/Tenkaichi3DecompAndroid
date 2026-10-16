@@ -70,16 +70,30 @@ object GpuProfiles {
         return -1
     }
 
-    fun profile(gpu: String): Profile? {
+    /** The Adreno 732 (Snapdragon 7+ Gen 3: Xiaomi Pad 7, Poco F6) by name. */
+    private fun isAdreno732(gpu: String): Boolean =
+        Regex("""adreno\D*732(?!\d)""").containsMatchIn(gpu.lowercase().replace("(tm)", ""))
+
+    /**
+     * The settings offered for [gpu]. [tablet]: the screen is a tablet's (smallestScreenWidthDp >= 600): a strong GPU
+     * there gets Snapdragon GSR as its screen filter, which sharpens the picture where it is stretched the most (a
+     * 2.5x picture on a 3200 x 2136 screen is enlarged about 2.4 times); its one pass costs little on such a GPU.
+     */
+    fun profile(gpu: String, tablet: Boolean = false): Profile? {
         val t = tierOf(gpu)
-        return when (t) {
-            0 -> Profile(gpu, 0, scale4 = 4, interp = 0, fragDepth = 0, frameSkip = 1, fxOffAdd = 16 or 32, filter = 0)
-            1 -> Profile(gpu, 1, scale4 = 4, interp = 0, fragDepth = 0, frameSkip = 1, fxOffAdd = 32, filter = 0)
-            2 -> Profile(gpu, 2, scale4 = 6, interp = 0, fragDepth = 0, frameSkip = 1, fxOffAdd = 0, filter = 0)
-            3 -> Profile(gpu, 3, scale4 = 8, interp = 0, fragDepth = 1, frameSkip = 1, fxOffAdd = 0, filter = 0)
-            4 -> Profile(gpu, 4, scale4 = 8, interp = 1, fragDepth = 1, frameSkip = 1, fxOffAdd = 0, filter = 0)
+        val p = when {
+            // The Adreno 732 has its own: the 730-739 rule's tier, with 2.5x and GSR, made for the Xiaomi Pad 7's
+            // 3200 x 2136 screen (a step above the tier's 2x, with GSR bringing it up to the screen). Not measured yet
+            // on other devices: players' logs (Debug > performance log) are what confirm or lower it.
+            t == 3 && isAdreno732(gpu) -> Profile(gpu, 3, scale4 = 10, interp = 0, fragDepth = 1, frameSkip = 1, fxOffAdd = 0, filter = 4)
+            t == 0 -> Profile(gpu, 0, scale4 = 4, interp = 0, fragDepth = 0, frameSkip = 1, fxOffAdd = 16 or 32, filter = 0)
+            t == 1 -> Profile(gpu, 1, scale4 = 4, interp = 0, fragDepth = 0, frameSkip = 1, fxOffAdd = 32, filter = 0)
+            t == 2 -> Profile(gpu, 2, scale4 = 6, interp = 0, fragDepth = 0, frameSkip = 1, fxOffAdd = 0, filter = 0)
+            t == 3 -> Profile(gpu, 3, scale4 = 8, interp = 0, fragDepth = 1, frameSkip = 1, fxOffAdd = 0, filter = 0)
+            t == 4 -> Profile(gpu, 4, scale4 = 8, interp = 1, fragDepth = 1, frameSkip = 1, fxOffAdd = 0, filter = 0)
             else -> null
         }
+        return if (p != null && tablet && p.tier >= 3) p.copy(filter = 4) else p
     }
 
     /** Writes the profile's settings (the player said yes); the tier is kept so that it is not offered again. */
