@@ -198,6 +198,18 @@ fun SettingsScreen(vm: AppViewModel) {
                 stringResource(R.string.present_mode_text),
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Text(stringResource(R.string.refresh_rate), style = MaterialTheme.typography.titleSmall)
+            ChipRow(
+                options = listOf(
+                    stringResource(R.string.refresh_auto) to 0, "60 Hz" to 1, "120 Hz" to 2, stringResource(R.string.refresh_keep) to 3,
+                ),
+                selected = get(EngineSettings.REFRESH, 0).coerceIn(0, 3),
+                onSelect = { vm.setting(EngineSettings.REFRESH, it) },
+            )
+            Text(
+                stringResource(R.string.refresh_rate_text),
+                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
 
 

@@ -156,6 +156,10 @@
     <string name="present_mode">Present mode</string>
     <string name="present_auto">Automatic</string>
     <string name="present_mode_text">How finished pictures reach the screen. Automatic: Mailbox where the device has it. FIFO (VSync) waits for the screen\'s refresh: no tearing, a little more latency, steadier pacing on some devices. Mailbox: no tearing, no wait. Immediate: lowest latency, may tear. Used the next time the game starts.</string>
+    <string name="refresh_rate">Screen refresh rate</string>
+    <string name="refresh_auto">Automatic</string>
+    <string name="refresh_keep">Don\'t change</string>
+    <string name="refresh_rate_text">The rate the screen is asked to run at while you play. The game shows 30 pictures a second in a fight: on a screen at 90 or 144 Hz some of them stay up longer than others and the picture judders. Automatic: 60 Hz, or 120 Hz with smooth motion at 120. The system may still choose another rate. Used the next time the game starts.</string>
     <string name="appearance">App appearance</string>
     <string name="theme">Theme</string>
     <string name="theme_dark">Dark</string>

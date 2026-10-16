@@ -155,6 +155,10 @@
     <string name="present_mode">Present mode</string>
     <string name="present_auto">Automático</string>
     <string name="present_mode_text">Como as imagens prontas chegam à tela. Automático: Mailbox onde o aparelho tiver. FIFO (VSync) espera a atualização da tela: sem tearing, um pouco mais de latência, ritmo mais estável em alguns aparelhos. Mailbox: sem tearing, sem espera. Immediate: menor latência, pode ter tearing. Vale na próxima vez que o jogo abrir.</string>
+    <string name="refresh_rate">Taxa de atualização da tela</string>
+    <string name="refresh_auto">Automático</string>
+    <string name="refresh_keep">Não mudar</string>
+    <string name="refresh_rate_text">A taxa pedida à tela enquanto você joga. O jogo mostra 30 imagens por segundo na luta: numa tela a 90 ou 144 Hz algumas ficam mais tempo que outras e a imagem treme. Automático: 60 Hz, ou 120 Hz com movimento suave a 120. O sistema ainda pode escolher outra taxa. Vale na próxima vez que o jogo abrir.</string>
     <string name="appearance">Aparência do app</string>
     <string name="theme">Tema</string>
     <string name="theme_dark">Escuro</string>

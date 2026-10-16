@@ -79,6 +79,7 @@ class EngineSettings(private val file: File) {
         const val GPU_TIER = "dr_gpu_tier"        // the GPU's tier the launcher's optimisations were made for (GpuProfiles)
         const val TOUCH = "dr_touch"              // on-screen controls: 0 off, 1 automatic, 2 always
         const val TOUCH_OPACITY = "dr_touch_alpha" // 10..100 %
+        const val REFRESH = "dr_refresh"          // the screen's refresh rate while playing: 0 from smooth motion, 1 60 Hz, 2 120 Hz, 3 left alone
 
         const val GLOW_DEFAULT = 60
         const val SCALE_DEFAULT = 2

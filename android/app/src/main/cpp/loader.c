@@ -732,6 +732,41 @@ JNIEXPORT jboolean JNICALL Java_com_dfdx047_dragonrage_engine_TouchBridge_native
     return fn != NULL && fn() ? JNI_TRUE : JNI_FALSE;
 }
 
+/* ---- The game's activity (com.dfdx047.dragonrage.engine.EngineNative): its lines in the game's own log, and the
+   engine's state it follows (the refresh rate it asks the screen for, the Game Mode state). */
+
+/* A line from the Java side into bt3_log.txt as well as logcat: the launcher's Debug page and a player's exported
+   log read that file, and what the activity asked of the system (refresh rate, ADPF, thermal state) belongs next to
+   the engine's speed lines it explains. */
+JNIEXPORT void JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeLog(JNIEnv *env, jclass cls, jstring text) {
+    const char *s;
+    (void)cls;
+    if (text == NULL || (s = (*env)->GetStringUTFChars(env, text, NULL)) == NULL) {
+        return;
+    }
+    say("%s", s);
+    (*env)->ReleaseStringUTFChars(env, text, s);
+}
+
+/* An int the engine exports (gsInterp, gPortInMenus), by name; `def` before the engine is loaded or without it. */
+static int engine_int(const char *name, volatile int **cache, int *looked, int def) {
+    if (!*looked && sEngine != NULL) {
+        *cache = (volatile int *)dlsym(sEngine, name);
+        *looked = 1;
+    }
+    return *cache != NULL ? **cache : def;
+}
+
+/* Smooth motion as the engine has it now (gs_draw.c: gsInterp; -1 before the first picture): the in-game menu
+   changes it while the game runs, and the refresh rate asked of the screen follows it. */
+JNIEXPORT jint JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeInterp(JNIEnv *env, jclass cls) {
+    static volatile int *p;
+    static int looked;
+    (void)env;
+    (void)cls;
+    return engine_int("gsInterp", &p, &looked, -1);
+}
+
 /* Read the player's actual side from BattleWork. In some battle setups the human side is side 1,
    so assuming sides[0] hides the team controls even though the touch buttons exist in the editor.
    BattleSide offsets are verified in include/battle/battle.h: sides at +0xC0, size 0x270,

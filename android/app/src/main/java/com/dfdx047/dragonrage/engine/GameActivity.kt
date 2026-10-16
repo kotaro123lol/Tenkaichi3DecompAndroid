@@ -50,12 +50,18 @@ class GameActivity : SDLActivity() {
     private val watchMenu = object : Runnable {
         override fun run() {
             pad?.suppressed = TouchBridge.menuOpen()
+            refresh?.follow(EngineNative.interp())
             handler.postDelayed(this, 100)
         }
     }
 
+    /** The screen's refresh rate while playing ([RefreshRate]; setting dr_refresh). */
+    private var refresh: RefreshRate? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         paths = GamePaths(this).also { it.ensure() }
+        var refreshSetting = 0
+        var interp = 0
         // the renderer for this start (Vulkan, or OpenGL ES for Mali when automatic): written before the engine reads it
         runCatching {
             val es = EngineSettings(paths.settings)
@@ -64,12 +70,34 @@ class GameActivity : SDLActivity() {
             val lang = when (resources.configuration.locales[0].language) { "pt" -> 1; "es" -> 2; else -> 0 }
             if (es.get(EngineSettings.LANG, -1) != lang) es.set(EngineSettings.LANG, lang)
             orientation = es.get(EngineSettings.ORIENTATION, 0)
+            refreshSetting = es.get(EngineSettings.REFRESH, 0).coerceIn(0, 3)
+            interp = es.get(EngineSettings.INTERP, 0)
         }
         requestedOrientation = orientationFlag()
         store = TouchStore(paths.root)
         installDataList()
+        // (before SDL makes its surface: createSDLSurface hands it over)
+        refresh = RefreshRate(this, refreshSetting)
         super.onCreate(savedInstanceState)
+        refresh?.start(interp)
         addTouchPad()
+    }
+
+    /** SDL's surface, with a second listener of its own: each new or changed surface gets the refresh rate vote again. */
+    override fun createSDLSurface(context: android.content.Context): org.libsdl.app.SDLSurface =
+        super.createSDLSurface(context).also { view ->
+            view.holder.addCallback(object : android.view.SurfaceHolder.Callback {
+                override fun surfaceCreated(holder: android.view.SurfaceHolder) = refresh?.onSurface(holder.surface) ?: Unit
+                override fun surfaceChanged(holder: android.view.SurfaceHolder, format: Int, width: Int, height: Int) =
+                    refresh?.onSurface(holder.surface) ?: Unit
+
+                override fun surfaceDestroyed(holder: android.view.SurfaceHolder) = refresh?.onSurface(null) ?: Unit
+            })
+        }
+
+    override fun onDestroy() {
+        refresh?.stop()
+        super.onDestroy()
     }
 
     /** The player's choice (launcher, Settings): 0 landscape, 1 portrait, 2 as the device is held. */

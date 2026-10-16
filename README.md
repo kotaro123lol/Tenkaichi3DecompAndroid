@@ -106,7 +106,7 @@ modlib/              the app's mod library
 
 Android keys in `bt3_settings.txt`: `dr_unlock_all`, `dr_renderer` (0 automatic, 1 Vulkan, 2 OpenGL ES), `dr_orient`
 (0 landscape, 1 portrait, 2 automatic), `dr_lang` (the in-game menu's language), `dr_gpu_tier` (the tier whose settings
-were offered), `perf_log`, `frag_depth`. The on-screen controller is in `touch_controls.json`. An optional
+were offered), `dr_refresh` (the screen's refresh rate while playing: 0 from smooth motion, 1 60 Hz, 2 120 Hz, 3 left to the system), `perf_log`, `frag_depth`. The on-screen controller is in `touch_controls.json`. An optional
 `match_url.txt` (one line, `https://...`) names another matchmaking service.
 
 ## Roadmap
