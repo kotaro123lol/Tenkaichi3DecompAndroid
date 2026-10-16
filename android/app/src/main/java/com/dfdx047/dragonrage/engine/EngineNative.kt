@@ -16,6 +16,15 @@ object EngineNative {
         runCatching { nativeLog("bt3: $text") }.onFailure { Log.i("bt3", text) }
     }
 
+    @JvmStatic private external fun nativeInMenus(): Int
+    @JvmStatic private external fun nativeOnline(): Boolean
+
     /** Smooth motion as the engine has it now (0 off .. 3), -1 when not known yet. */
     fun interp(): Int = runCatching { nativeInterp() }.getOrDefault(-1)
+
+    /** 1 while the menus run, 0 in a fight, -1 when not known (the engine not loaded yet). */
+    fun inMenus(): Int = runCatching { nativeInMenus() }.getOrDefault(-1)
+
+    /** In an online match, or connected to a room. */
+    fun online(): Boolean = runCatching { nativeOnline() }.getOrDefault(false)
 }

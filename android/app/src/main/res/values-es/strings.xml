@@ -161,6 +161,8 @@
     <string name="refresh_rate_text">La frecuencia que se pide a la pantalla mientras juegas. El juego muestra 30 imágenes por segundo en la pelea: en una pantalla a 90 o 144 Hz unas quedan más tiempo que otras y la imagen tiembla. Automática: 60 Hz, o 120 Hz con movimiento fluido a 120. El sistema aún puede elegir otra frecuencia. Se aplica la próxima vez que se inicie el juego.</string>
     <string name="adpf">Pistas de rendimiento (ADPF)</string>
     <string name="adpf_text">El juego le dice a Android cuánto tardó cada imagen y cuánto puede tardar, para que el procesador acelere antes de que la pelea se trabe y baje cuando sobra tiempo (menos calor en sesiones largas). Android 13 o más reciente; en los demás no hace nada. El log dice si el sistema lo aceptó.</string>
+    <string name="game_state">Informar al Modo de juego</string>
+    <string name="game_state_text">Android 13 o más reciente: el sistema sabe cuándo hay una pelea (una en línea no se puede interrumpir) y cuándo estás en los menús, para mantener el dispositivo rápido y con buena respuesta en las peleas. Los modos Rendimiento y Batería del panel de juegos del sistema también funcionan.</string>
     <string name="appearance">Apariencia de la app</string>
     <string name="theme">Tema</string>
     <string name="theme_dark">Oscuro</string>

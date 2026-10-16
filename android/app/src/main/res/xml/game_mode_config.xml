@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android's Game Mode (Android 13+; read by the system, not by the app): the game supports the Performance and
+     Battery modes the player can pick in the system's game dashboard (the system then sets its own power policy; the game's
+     log says which mode was on, and the game's own settings stay what the player chose). The system must not swap in its own ANGLE driver (the engine picks Vulkan
+     or OpenGL ES itself, and a custom Adreno driver may be loaded), shrink the game's surface (the engine renders at
+     its own internal resolution and filters it to the screen) or cap its frame rate (the activity asks the screen for
+     a rate the game divides evenly: RefreshRate.kt). -->
+<game-mode-config xmlns:android="http://schemas.android.com/apk/res/android"
+    android:supportsPerformanceGameMode="true"
+    android:supportsBatteryGameMode="true"
+    android:allowGameAngleDriver="false"
+    android:allowGameDownscaling="false"
+    android:allowGameFpsOverride="false" />

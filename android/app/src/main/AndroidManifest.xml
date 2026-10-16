@@ -30,6 +30,9 @@
         android:extractNativeLibs="true"
         android:localeConfig="@xml/locales_config"
         android:hardwareAccelerated="true">
+        <!-- Android's Game Mode (13+): which modes the game supports, and the interventions it does not want -->
+        <meta-data android:name="android.game_mode_config" android:resource="@xml/game_mode_config" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

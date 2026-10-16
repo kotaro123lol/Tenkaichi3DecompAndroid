@@ -51,6 +51,7 @@ class GameActivity : SDLActivity() {
         override fun run() {
             pad?.suppressed = TouchBridge.menuOpen()
             refresh?.follow(EngineNative.interp())
+            gameState?.update()
             handler.postDelayed(this, 100)
         }
     }
@@ -60,6 +61,9 @@ class GameActivity : SDLActivity() {
 
     /** The device's heat in the game's log while it runs ([ThermalLog]; with perf_log). */
     private var thermal: ThermalLog? = null
+
+    /** The game's state told to Android's Game Mode ([GameModeState]; setting dr_game_state). */
+    private var gameState: GameModeState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         paths = GamePaths(this).also { it.ensure() }
@@ -76,6 +80,7 @@ class GameActivity : SDLActivity() {
             refreshSetting = es.get(EngineSettings.REFRESH, 0).coerceIn(0, 3)
             interp = es.get(EngineSettings.INTERP, 0)
             if (es.get(EngineSettings.PERF_LOG, 1) != 0) thermal = ThermalLog(this)
+            gameState = GameModeState(this, es.get(EngineSettings.GAME_STATE, 1) != 0)
         }
         requestedOrientation = orientationFlag()
         store = TouchStore(paths.root)
@@ -84,6 +89,7 @@ class GameActivity : SDLActivity() {
         refresh = RefreshRate(this, refreshSetting)
         super.onCreate(savedInstanceState)
         refresh?.start(interp)
+        gameState?.start()
         addTouchPad()
     }
 

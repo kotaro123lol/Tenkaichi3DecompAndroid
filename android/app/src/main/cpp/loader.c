@@ -767,6 +767,31 @@ JNIEXPORT jint JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeInt
     return engine_int("gsInterp", &p, &looked, -1);
 }
 
+/* 1 while the menus run (headless.c: gPortInMenus, the signal the controller's automatic layout follows), 0 in a
+   fight, -1 without the engine. */
+JNIEXPORT jint JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeInMenus(JNIEnv *env, jclass cls) {
+    static volatile int *p;
+    static int looked;
+    (void)env;
+    (void)cls;
+    return engine_int("gPortInMenus", &p, &looked, -1);
+}
+
+/* 1 in an online match or connected to a room (gs/net.c): such a fight cannot be paused or interrupted without the
+   other player's game going on. */
+JNIEXPORT jboolean JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeOnline(JNIEnv *env, jclass cls) {
+    static int (*session)(void), (*active)(void);
+    static int looked;
+    (void)env;
+    (void)cls;
+    if (!looked && sEngine != NULL) {
+        session = (int (*)(void))dlsym(sEngine, "Port_NetSession");
+        active = (int (*)(void))dlsym(sEngine, "Port_NetActive");
+        looked = 1;
+    }
+    return (session != NULL && session()) || (active != NULL && active()) ? JNI_TRUE : JNI_FALSE;
+}
+
 /* Read the player's actual side from BattleWork. In some battle setups the human side is side 1,
    so assuming sides[0] hides the team controls even though the touch buttons exist in the editor.
    BattleSide offsets are verified in include/battle/battle.h: sides at +0xC0, size 0x270,

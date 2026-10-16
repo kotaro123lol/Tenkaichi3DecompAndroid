@@ -213,6 +213,9 @@ fun SettingsScreen(vm: AppViewModel) {
             ToggleRow(stringResource(R.string.adpf), stringResource(R.string.adpf_text), get(EngineSettings.ADPF, 1) != 0) {
                 vm.setting(EngineSettings.ADPF, if (it) 1 else 0)
             }
+            ToggleRow(stringResource(R.string.game_state), stringResource(R.string.game_state_text), get(EngineSettings.GAME_STATE, 1) != 0) {
+                vm.setting(EngineSettings.GAME_STATE, if (it) 1 else 0)
+            }
         }
 
 
