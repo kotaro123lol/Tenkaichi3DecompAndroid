@@ -148,6 +148,7 @@ class GameActivity : SDLActivity() {
     }
 
     override fun onResume() {
+        EngineNative.setForeground(true) // (before SDL's own resume: the engine looks at the window's events again)
         super.onResume()
         pad?.let { it.config = store.load() }
         handler.post(watchMenu)
@@ -157,6 +158,7 @@ class GameActivity : SDLActivity() {
     override fun onPause() {
         handler.removeCallbacks(watchMenu)
         thermal?.stop()
+        EngineNative.setForeground(false)
         TouchBridge.setPad(0, 128, 128, 128, 128)
         super.onPause()
     }

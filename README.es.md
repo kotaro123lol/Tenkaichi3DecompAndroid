@@ -107,7 +107,7 @@ modlib/              the app's mod library
 
 Claves de Android en `bt3_settings.txt`: `dr_unlock_all`, `dr_renderer` (0 automático, 1 Vulkan, 2 OpenGL ES), `dr_orient`
 (0 horizontal, 1 vertical, 2 automática), `dr_lang` (el idioma del menú dentro del juego), `dr_gpu_tier` (el nivel cuyos
-ajustes se ofrecieron), `dr_refresh` (la frecuencia de la pantalla al jugar: 0 según el movimiento fluido, 1 60 Hz, 2 120 Hz, 3 la del sistema), `dr_adpf` (pistas de rendimiento de Android para el hilo del juego, Android 13+: 1 sí, 0 no), `dr_game_state` (menús / pelea / pelea en línea informados al Modo de juego de Android, Android 13+: 1 sí, 0 no), `perf_log`, `frag_depth`. El control en pantalla está en `touch_controls.json`. Un archivo
+ajustes se ofrecieron), `dr_refresh` (la frecuencia de la pantalla al jugar: 0 según el movimiento fluido, 1 60 Hz, 2 120 Hz, 3 la del sistema), `dr_adpf` (pistas de rendimiento de Android para el hilo del juego, Android 13+: 1 sí, 0 no), `dr_game_state` (menús / pelea / pelea en línea informados al Modo de juego de Android, Android 13+: 1 sí, 0 no), `dr_bg_pause` (la app en segundo plano: 1 el juego se pausa, en línea solo deja de dibujar, Vulkan; 0 SDL lo detiene todo), `perf_log`, `frag_depth`. El control en pantalla está en `touch_controls.json`. Un archivo
 opcional `match_url.txt` (una línea, `https://...`) indica otro servicio de matchmaking.
 
 ## Hoja de ruta

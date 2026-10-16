@@ -586,6 +586,30 @@ int SDL_main(int argc, char *argv[]) {
             fclose(fp);
         }
     }
+    {   /* The app in the background. SDL's own way (its default) is to stop the thread that takes the window's events
+           until the app returns: the whole game stops, an online match included, whose other player's game goes on
+           (the two then no longer agree). With "pause in the background" (dr_bg_pause, on by default) the engine does
+           it itself (gs_gpu.c: background_hold): it stops unless a match is online, and then it only stops drawing.
+           Vulkan only: the OpenGL ES renderer's context is taken from it in the background, and it keeps SDL's way. */
+        char line[128];
+        int bgPause = 1, gl = 0;
+        FILE *fp = fopen("bt3_settings.txt", "r");
+        while (fp != NULL && fgets(line, sizeof(line), fp) != NULL) {
+            if (strncmp(line, "dr_bg_pause=", 12) == 0) {
+                bgPause = atoi(line + 12);
+            } else if (strncmp(line, "gpu_api=", 8) == 0) {
+                gl = atoi(line + 8) == 1;
+            }
+        }
+        if (fp != NULL) {
+            fclose(fp);
+        }
+        if (bgPause != 0 && !gl) {
+            setenv("SDL_ANDROID_BLOCK_ON_PAUSE", "0", 0);
+        }
+        say("background: %s", bgPause == 0 ? "SDL stops the game (dr_bg_pause 0)" : gl ? "SDL stops the game (OpenGL ES)"
+                                                                                       : "the engine pauses the game (online: only drawing stops)");
+    }
     if (argc > 4 && argv[3][0] != '\0' && argv[4][0] != '\0') {
         custom_driver(libdir, argv[3], argv[4]); /* (chosen in the app: GameActivity passes its folder and file) */
     }
@@ -765,6 +789,19 @@ JNIEXPORT jint JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeInt
     (void)env;
     (void)cls;
     return engine_int("gsInterp", &p, &looked, -1);
+}
+
+/* The activity is in front (onResume) or not (onPause): gs_gpu.c stops taking the window's events while the app is
+   in the background during an online match (each look costs SDL a wait then) and starts again on this. */
+JNIEXPORT void JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeSetForeground(JNIEnv *env, jclass cls, jboolean front) {
+    static volatile int *p;
+    static int looked;
+    (void)env;
+    (void)cls;
+    engine_int("gPortAppForeground", &p, &looked, 0);
+    if (p != NULL) {
+        *p = front ? 1 : 0;
+    }
 }
 
 /* 1 while the menus run (headless.c: gPortInMenus, the signal the controller's automatic layout follows), 0 in a

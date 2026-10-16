@@ -16,11 +16,17 @@ object EngineNative {
         runCatching { nativeLog("bt3: $text") }.onFailure { Log.i("bt3", text) }
     }
 
+    @JvmStatic private external fun nativeSetForeground(front: Boolean)
     @JvmStatic private external fun nativeInMenus(): Int
     @JvmStatic private external fun nativeOnline(): Boolean
 
     /** Smooth motion as the engine has it now (0 off .. 3), -1 when not known yet. */
     fun interp(): Int = runCatching { nativeInterp() }.getOrDefault(-1)
+
+    /** The game's activity is in front or not (port/src/gs/gs_gpu.c: an online match in the background). */
+    fun setForeground(front: Boolean) {
+        runCatching { nativeSetForeground(front) }
+    }
 
     /** 1 while the menus run, 0 in a fight, -1 when not known (the engine not loaded yet). */
     fun inMenus(): Int = runCatching { nativeInMenus() }.getOrDefault(-1)

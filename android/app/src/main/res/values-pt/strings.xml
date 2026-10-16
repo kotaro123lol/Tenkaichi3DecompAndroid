@@ -163,6 +163,8 @@
     <string name="adpf_text">O jogo diz ao Android quanto tempo cada imagem levou e quanto pode levar, para o processador acelerar antes de a luta engasgar e desacelerar quando sobra tempo (menos calor em sessões longas). Android 13 ou mais novo; nos outros não faz nada. O log diz se o sistema aceitou.</string>
     <string name="game_state">Informar o Modo de Jogo</string>
     <string name="game_state_text">Android 13 ou mais novo: o sistema fica sabendo quando há uma luta (uma online não pode ser interrompida) e quando você está nos menus, para manter o aparelho rápido e responsivo nas lutas. Os modos Desempenho e Bateria do painel de jogos do sistema também funcionam.</string>
+    <string name="bg_pause">Pausar em segundo plano</string>
+    <string name="bg_pause_text">Quando você sai do jogo, ele para com o som até você voltar. Numa partida online ele continua (o jogo do adversário segue) e só para de desenhar. Com Vulkan; com OpenGL ES, ou com isto desligado, o jogo para como antes, partidas online incluídas.</string>
     <string name="appearance">Aparência do app</string>
     <string name="theme">Tema</string>
     <string name="theme_dark">Escuro</string>

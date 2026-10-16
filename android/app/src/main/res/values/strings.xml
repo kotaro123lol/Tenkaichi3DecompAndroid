@@ -164,6 +164,8 @@
     <string name="adpf_text">The game tells Android how long each picture took and how long it may take, so the processor speeds up before a fight stutters and slows down when there is room (less heat in long sessions). Android 13 or newer; elsewhere it does nothing. The log says whether the system accepted it.</string>
     <string name="game_state">Tell Game Mode what is happening</string>
     <string name="game_state_text">Android 13 or newer: the system is told when a fight is on (an online one cannot be interrupted) and when you are in the menus, so it can keep the device fast and responsive during fights. The Performance and Battery modes of the system\'s game dashboard also work.</string>
+    <string name="bg_pause">Pause in the background</string>
+    <string name="bg_pause_text">When you leave the game, it stops with its sound until you come back. During an online match it keeps running (your opponent\'s game goes on) and only stops drawing. With Vulkan; with OpenGL ES, or with this off, the game stops as before, online matches included.</string>
     <string name="appearance">App appearance</string>
     <string name="theme">Theme</string>
     <string name="theme_dark">Dark</string>

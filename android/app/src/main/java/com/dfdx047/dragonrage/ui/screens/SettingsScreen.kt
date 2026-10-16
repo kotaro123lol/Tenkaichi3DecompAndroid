@@ -216,6 +216,9 @@ fun SettingsScreen(vm: AppViewModel) {
             ToggleRow(stringResource(R.string.game_state), stringResource(R.string.game_state_text), get(EngineSettings.GAME_STATE, 1) != 0) {
                 vm.setting(EngineSettings.GAME_STATE, if (it) 1 else 0)
             }
+            ToggleRow(stringResource(R.string.bg_pause), stringResource(R.string.bg_pause_text), get(EngineSettings.BG_PAUSE, 1) != 0) {
+                vm.setting(EngineSettings.BG_PAUSE, if (it) 1 else 0)
+            }
         }
 
 
