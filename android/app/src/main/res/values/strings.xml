@@ -156,6 +156,16 @@
     <string name="present_mode">Present mode</string>
     <string name="present_auto">Automatic</string>
     <string name="present_mode_text">How finished pictures reach the screen. Automatic: Mailbox where the device has it. FIFO (VSync) waits for the screen\'s refresh: no tearing, a little more latency, steadier pacing on some devices. Mailbox: no tearing, no wait. Immediate: lowest latency, may tear. Used the next time the game starts.</string>
+    <string name="refresh_rate">Screen refresh rate</string>
+    <string name="refresh_auto">Automatic</string>
+    <string name="refresh_keep">Don\'t change</string>
+    <string name="refresh_rate_text">The rate the screen is asked to run at while you play. The game shows 30 pictures a second in a fight: on a screen at 90 or 144 Hz some of them stay up longer than others and the picture judders. Automatic: 60 Hz, or 120 Hz with smooth motion at 120. The system may still choose another rate. Used the next time the game starts.</string>
+    <string name="adpf">Performance hints (ADPF)</string>
+    <string name="adpf_text">The game tells Android how long each picture took and how long it may take, so the processor speeds up before a fight stutters and slows down when there is room (less heat in long sessions). Android 13 or newer; elsewhere it does nothing. The log says whether the system accepted it.</string>
+    <string name="game_state">Tell Game Mode what is happening</string>
+    <string name="game_state_text">Android 13 or newer: the system is told when a fight is on (an online one cannot be interrupted) and when you are in the menus, so it can keep the device fast and responsive during fights. The Performance and Battery modes of the system\'s game dashboard also work.</string>
+    <string name="bg_pause">Pause in the background</string>
+    <string name="bg_pause_text">When you leave the game, it stops with its sound until you come back. During an online match it keeps running (your opponent\'s game goes on) and only stops drawing. With Vulkan; with OpenGL ES, or with this off, the game stops as before, online matches included.</string>
     <string name="appearance">App appearance</string>
     <string name="theme">Theme</string>
     <string name="theme_dark">Dark</string>
@@ -321,6 +331,7 @@
     <string name="gpu_opt_blur_far">Distance blur off</string>
     <string name="gpu_opt_blur_move">Movement blur off</string>
     <string name="gpu_opt_filter">Bilinear screen filter (no extra pass)</string>
+    <string name="gpu_opt_filter_gsr">Snapdragon GSR screen filter (sharper on a large screen)</string>
     <string name="frag_depth">Precise depth</string>
     <string name="frag_depth_text">Exact overlap of surfaces in one plane (waterfalls, marks on the ground). Off is faster on weaker GPUs, with a rare flicker.</string>
     <string name="frame_skip">Skip pictures instead of slowing down</string>

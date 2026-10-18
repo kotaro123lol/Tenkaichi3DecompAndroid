@@ -198,6 +198,27 @@ fun SettingsScreen(vm: AppViewModel) {
                 stringResource(R.string.present_mode_text),
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Text(stringResource(R.string.refresh_rate), style = MaterialTheme.typography.titleSmall)
+            ChipRow(
+                options = listOf(
+                    stringResource(R.string.refresh_auto) to 0, "60 Hz" to 1, "120 Hz" to 2, stringResource(R.string.refresh_keep) to 3,
+                ),
+                selected = get(EngineSettings.REFRESH, 0).coerceIn(0, 3),
+                onSelect = { vm.setting(EngineSettings.REFRESH, it) },
+            )
+            Text(
+                stringResource(R.string.refresh_rate_text),
+                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            ToggleRow(stringResource(R.string.adpf), stringResource(R.string.adpf_text), get(EngineSettings.ADPF, 1) != 0) {
+                vm.setting(EngineSettings.ADPF, if (it) 1 else 0)
+            }
+            ToggleRow(stringResource(R.string.game_state), stringResource(R.string.game_state_text), get(EngineSettings.GAME_STATE, 1) != 0) {
+                vm.setting(EngineSettings.GAME_STATE, if (it) 1 else 0)
+            }
+            ToggleRow(stringResource(R.string.bg_pause), stringResource(R.string.bg_pause_text), get(EngineSettings.BG_PAUSE, 1) != 0) {
+                vm.setting(EngineSettings.BG_PAUSE, if (it) 1 else 0)
+            }
         }
 
 

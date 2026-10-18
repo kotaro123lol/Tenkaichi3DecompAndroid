@@ -155,6 +155,16 @@
     <string name="present_mode">Present mode</string>
     <string name="present_auto">Automático</string>
     <string name="present_mode_text">Como as imagens prontas chegam à tela. Automático: Mailbox onde o aparelho tiver. FIFO (VSync) espera a atualização da tela: sem tearing, um pouco mais de latência, ritmo mais estável em alguns aparelhos. Mailbox: sem tearing, sem espera. Immediate: menor latência, pode ter tearing. Vale na próxima vez que o jogo abrir.</string>
+    <string name="refresh_rate">Taxa de atualização da tela</string>
+    <string name="refresh_auto">Automático</string>
+    <string name="refresh_keep">Não mudar</string>
+    <string name="refresh_rate_text">A taxa pedida à tela enquanto você joga. O jogo mostra 30 imagens por segundo na luta: numa tela a 90 ou 144 Hz algumas ficam mais tempo que outras e a imagem treme. Automático: 60 Hz, ou 120 Hz com movimento suave a 120. O sistema ainda pode escolher outra taxa. Vale na próxima vez que o jogo abrir.</string>
+    <string name="adpf">Dicas de desempenho (ADPF)</string>
+    <string name="adpf_text">O jogo diz ao Android quanto tempo cada imagem levou e quanto pode levar, para o processador acelerar antes de a luta engasgar e desacelerar quando sobra tempo (menos calor em sessões longas). Android 13 ou mais novo; nos outros não faz nada. O log diz se o sistema aceitou.</string>
+    <string name="game_state">Informar o Modo de Jogo</string>
+    <string name="game_state_text">Android 13 ou mais novo: o sistema fica sabendo quando há uma luta (uma online não pode ser interrompida) e quando você está nos menus, para manter o aparelho rápido e responsivo nas lutas. Os modos Desempenho e Bateria do painel de jogos do sistema também funcionam.</string>
+    <string name="bg_pause">Pausar em segundo plano</string>
+    <string name="bg_pause_text">Quando você sai do jogo, ele para com o som até você voltar. Numa partida online ele continua (o jogo do adversário segue) e só para de desenhar. Com Vulkan; com OpenGL ES, ou com isto desligado, o jogo para como antes, partidas online incluídas.</string>
     <string name="appearance">Aparência do app</string>
     <string name="theme">Tema</string>
     <string name="theme_dark">Escuro</string>
@@ -320,6 +330,7 @@
     <string name="gpu_opt_blur_far">Desfoque de distância desligado</string>
     <string name="gpu_opt_blur_move">Desfoque de movimento desligado</string>
     <string name="gpu_opt_filter">Filtro de tela bilinear (sem passada extra)</string>
+    <string name="gpu_opt_filter_gsr">Filtro de tela Snapdragon GSR (mais nítido numa tela grande)</string>
     <string name="frag_depth">Profundidade precisa</string>
     <string name="frag_depth_text">Sobreposição exata de superfícies no mesmo plano (cachoeiras, marcas no chão). Desligado é mais rápido em GPUs fracas, com uma piscada rara.</string>
     <string name="frame_skip">Pular quadros em vez de ficar lento</string>

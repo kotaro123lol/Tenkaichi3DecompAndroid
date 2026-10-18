@@ -79,6 +79,11 @@ class EngineSettings(private val file: File) {
         const val GPU_TIER = "dr_gpu_tier"        // the GPU's tier the launcher's optimisations were made for (GpuProfiles)
         const val TOUCH = "dr_touch"              // on-screen controls: 0 off, 1 automatic, 2 always
         const val TOUCH_OPACITY = "dr_touch_alpha" // 10..100 %
+        const val REFRESH = "dr_refresh"          // the screen's refresh rate while playing: 0 from smooth motion, 1 60 Hz, 2 120 Hz, 3 left alone
+        const val ADPF = "dr_adpf"                // Android's performance hints for the game thread (port/src/gs/adpf_android.c): 1 on, 0 off
+        const val GAME_STATE = "dr_game_state"    // the game's state (menus, fight, online fight) told to Android's Game Mode: 1 on, 0 off
+        const val BG_PAUSE = "dr_bg_pause"        // the app in the background: 1 the engine pauses the game (online: only drawing stops; Vulkan), 0 SDL's way
+        const val PERF_LOG = "perf_log"           // the engine's speed lines (and the heat's) in bt3_log.txt: 1 on (default), 0 off
 
         const val GLOW_DEFAULT = 60
         const val SCALE_DEFAULT = 2

@@ -586,6 +586,30 @@ int SDL_main(int argc, char *argv[]) {
             fclose(fp);
         }
     }
+    {   /* The app in the background. SDL's own way (its default) is to stop the thread that takes the window's events
+           until the app returns: the whole game stops, an online match included, whose other player's game goes on
+           (the two then no longer agree). With "pause in the background" (dr_bg_pause, on by default) the engine does
+           it itself (gs_gpu.c: background_hold): it stops unless a match is online, and then it only stops drawing.
+           Vulkan only: the OpenGL ES renderer's context is taken from it in the background, and it keeps SDL's way. */
+        char line[128];
+        int bgPause = 1, gl = 0;
+        FILE *fp = fopen("bt3_settings.txt", "r");
+        while (fp != NULL && fgets(line, sizeof(line), fp) != NULL) {
+            if (strncmp(line, "dr_bg_pause=", 12) == 0) {
+                bgPause = atoi(line + 12);
+            } else if (strncmp(line, "gpu_api=", 8) == 0) {
+                gl = atoi(line + 8) == 1;
+            }
+        }
+        if (fp != NULL) {
+            fclose(fp);
+        }
+        if (bgPause != 0 && !gl) {
+            setenv("SDL_ANDROID_BLOCK_ON_PAUSE", "0", 0);
+        }
+        say("background: %s", bgPause == 0 ? "SDL stops the game (dr_bg_pause 0)" : gl ? "SDL stops the game (OpenGL ES)"
+                                                                                       : "the engine pauses the game (online: only drawing stops)");
+    }
     if (argc > 4 && argv[3][0] != '\0' && argv[4][0] != '\0') {
         custom_driver(libdir, argv[3], argv[4]); /* (chosen in the app: GameActivity passes its folder and file) */
     }
@@ -730,6 +754,79 @@ JNIEXPORT jboolean JNICALL Java_com_dfdx047_dragonrage_engine_TouchBridge_native
         fn = (int (*)(void))dlsym(sEngine, "Ui_IsOpen");
     }
     return fn != NULL && fn() ? JNI_TRUE : JNI_FALSE;
+}
+
+/* ---- The game's activity (com.dfdx047.dragonrage.engine.EngineNative): its lines in the game's own log, and the
+   engine's state it follows (the refresh rate it asks the screen for, the Game Mode state). */
+
+/* A line from the Java side into bt3_log.txt as well as logcat: the launcher's Debug page and a player's exported
+   log read that file, and what the activity asked of the system (refresh rate, ADPF, thermal state) belongs next to
+   the engine's speed lines it explains. */
+JNIEXPORT void JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeLog(JNIEnv *env, jclass cls, jstring text) {
+    const char *s;
+    (void)cls;
+    if (text == NULL || (s = (*env)->GetStringUTFChars(env, text, NULL)) == NULL) {
+        return;
+    }
+    say("%s", s);
+    (*env)->ReleaseStringUTFChars(env, text, s);
+}
+
+/* An int the engine exports (gsInterp, gPortInMenus), by name; `def` before the engine is loaded or without it. */
+static int engine_int(const char *name, volatile int **cache, int *looked, int def) {
+    if (!*looked && sEngine != NULL) {
+        *cache = (volatile int *)dlsym(sEngine, name);
+        *looked = 1;
+    }
+    return *cache != NULL ? **cache : def;
+}
+
+/* Smooth motion as the engine has it now (gs_draw.c: gsInterp; -1 before the first picture): the in-game menu
+   changes it while the game runs, and the refresh rate asked of the screen follows it. */
+JNIEXPORT jint JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeInterp(JNIEnv *env, jclass cls) {
+    static volatile int *p;
+    static int looked;
+    (void)env;
+    (void)cls;
+    return engine_int("gsInterp", &p, &looked, -1);
+}
+
+/* The activity is in front (onResume) or not (onPause): gs_gpu.c stops taking the window's events while the app is
+   in the background during an online match (each look costs SDL a wait then) and starts again on this. */
+JNIEXPORT void JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeSetForeground(JNIEnv *env, jclass cls, jboolean front) {
+    static volatile int *p;
+    static int looked;
+    (void)env;
+    (void)cls;
+    engine_int("gPortAppForeground", &p, &looked, 0);
+    if (p != NULL) {
+        *p = front ? 1 : 0;
+    }
+}
+
+/* 1 while the menus run (headless.c: gPortInMenus, the signal the controller's automatic layout follows), 0 in a
+   fight, -1 without the engine. */
+JNIEXPORT jint JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeInMenus(JNIEnv *env, jclass cls) {
+    static volatile int *p;
+    static int looked;
+    (void)env;
+    (void)cls;
+    return engine_int("gPortInMenus", &p, &looked, -1);
+}
+
+/* 1 in an online match or connected to a room (gs/net.c): such a fight cannot be paused or interrupted without the
+   other player's game going on. */
+JNIEXPORT jboolean JNICALL Java_com_dfdx047_dragonrage_engine_EngineNative_nativeOnline(JNIEnv *env, jclass cls) {
+    static int (*session)(void), (*active)(void);
+    static int looked;
+    (void)env;
+    (void)cls;
+    if (!looked && sEngine != NULL) {
+        session = (int (*)(void))dlsym(sEngine, "Port_NetSession");
+        active = (int (*)(void))dlsym(sEngine, "Port_NetActive");
+        looked = 1;
+    }
+    return (session != NULL && session()) || (active != NULL && active()) ? JNI_TRUE : JNI_FALSE;
 }
 
 /* Read the player's actual side from BattleWork. In some battle setups the human side is side 1,

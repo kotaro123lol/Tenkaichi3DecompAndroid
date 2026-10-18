@@ -106,7 +106,7 @@ modlib/              the app's mod library
 
 Chaves do Android em `bt3_settings.txt`: `dr_unlock_all`, `dr_renderer` (0 automático, 1 Vulkan, 2 OpenGL ES), `dr_orient`
 (0 paisagem, 1 retrato, 2 automático), `dr_lang` (o idioma do menu dentro do jogo), `dr_gpu_tier` (o nível cujas
-configurações foram sugeridas), `perf_log`, `frag_depth`. O controle na tela fica em `touch_controls.json`. Um arquivo
+configurações foram sugeridas), `dr_refresh` (a taxa da tela durante o jogo: 0 pelo movimento suave, 1 60 Hz, 2 120 Hz, 3 a do sistema), `dr_adpf` (dicas de desempenho do Android para a thread do jogo, Android 13+: 1 ligado, 0 desligado), `dr_game_state` (menus / luta / luta online informados ao Modo de Jogo do Android, Android 13+: 1 ligado, 0 desligado), `dr_bg_pause` (o app em segundo plano: 1 o jogo pausa, online só para de desenhar, Vulkan; 0 o SDL para tudo), `perf_log`, `frag_depth`. O controle na tela fica em `touch_controls.json`. Um arquivo
 opcional `match_url.txt` (uma linha, `https://...`) aponta outro serviço de matchmaking.
 
 ## Roadmap

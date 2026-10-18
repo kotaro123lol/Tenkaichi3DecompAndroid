@@ -166,7 +166,10 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     /** Recommended settings for this GPU waiting for the player's yes or no (a dialog). */
     val gpuOffer: StateFlow<GpuProfiles.Profile?> = _gpuOffer.asStateFlow()
 
-    fun gpuProfile(): GpuProfiles.Profile? = GpuProfiles.profile(_gpuName.value)
+    fun gpuProfile(): GpuProfiles.Profile? = GpuProfiles.profile(_gpuName.value, isTablet())
+
+    /** A tablet's screen (Android's own line: 600 dp on the shorter side), for the GPU's offered screen filter. */
+    private fun isTablet(): Boolean = getApplication<Application>().resources.configuration.smallestScreenWidthDp >= 600
 
     fun offerGpuProfile() {
         val p = gpuProfile()
@@ -240,7 +243,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
             runCatching { Renderer.apply(settings, paths) }
             _settings.value = settings.snapshot()
             // the GPU's recommended settings, offered once (GpuProfiles)
-            val p = GpuProfiles.profile(_gpuName.value)
+            val p = gpuProfile()
             if (p != null && settings.get(EngineSettings.GPU_TIER, -1) == -1) _gpuOffer.value = p
             _perf.value = runCatching { PerfReport.read(paths) }.getOrNull()
         }

@@ -496,6 +496,62 @@ static int window_ready(void) {
     }
     return 0;
 }
+/* ---- The app in the background (the roadmap's "pause the game while the app is in the background").
+   SDL's own way, its default, stops the thread that takes the window's events until the app returns, and that is
+   the game's thread: the whole game stops, an online match included, whose other player's game goes on without it.
+   With "pause in the background" (setting dr_bg_pause, on by default; Vulkan only, loader.c) SDL is told not to, and
+   this does it instead: the game, its sound and its pictures stop here, between two frames, until the app returns;
+   in an online match (or connected to a room) the game goes on and only its pictures stop (window_ready: nothing
+   is shown without a surface), so the two copies keep agreeing.
+   While SDL is in the background and not blocking, each look at its events waits up to 100 ms for the app to come
+   back: during an online match the window's events are not looked at until the activity says it is in front again
+   (gPortAppForeground, set by GameActivity through loader.c). */
+volatile int gPortAppForeground = 1;
+static int sInBackground;
+static int background_online(void) {
+    extern int Port_NetSession(void), Port_NetActive(void); /* gs/net.c */
+    return Port_NetSession() || Port_NetActive();
+}
+/* 1: SDL does not stop the game by itself (the hint was set by loader.c), so this file must. */
+static int background_ours(void) {
+    static int ours = -1;
+    if (ours < 0) {
+        ours = !SDL_GetHintBoolean(SDL_HINT_ANDROID_BLOCK_ON_PAUSE, true);
+    }
+    return ours;
+}
+static void background_hold(void) {
+    extern void Port_AudioPause(int on); /* gs/snd_adx.c */
+    static SDL_Event kept[64];           /* what came in meanwhile (a button let go, the window resized): handed back */
+    int nKept = 0, i;
+    uint64_t t0 = SDL_GetTicksNS();
+    SDL_Event ev;
+    if (!sInBackground || !background_ours() || background_online()) {
+        return;
+    }
+    fprintf(stderr, "bt3: the app went to the background: the game is paused\n");
+    Port_AudioPause(1);
+    while (sInBackground) {
+        if (!SDL_WaitEventTimeout(&ev, 1000)) {
+            continue;
+        }
+        if (ev.type == SDL_EVENT_DID_ENTER_FOREGROUND) {
+            sWindowBack = 1;
+            sInBackground = 0;
+        } else if (ev.type == SDL_EVENT_QUIT) {
+            fflush(NULL); /* (as poll_events: not exit(), see there) */
+            _exit(0);
+        } else if (ev.type != SDL_EVENT_WILL_ENTER_BACKGROUND && ev.type != SDL_EVENT_DID_ENTER_BACKGROUND &&
+                   ev.type != SDL_EVENT_WILL_ENTER_FOREGROUND && nKept < 64) {
+            kept[nKept++] = ev;
+        }
+    }
+    Port_AudioPause(0);
+    for (i = 0; i < nKept; i++) {
+        SDL_PushEvent(&kept[i]);
+    }
+    fprintf(stderr, "bt3: back from the background after %.1f s: the game goes on\n", (double)(SDL_GetTicksNS() - t0) / 1e9);
+}
 #else
 #define window_ready() 1
 #endif
@@ -736,14 +792,21 @@ static void poll_events(void) {
     if (PortInput_ComboPoll()) {
         Ui_Toggle(); /* START + SELECT, held together (also the on-screen controller's two buttons) */
     }
+#ifdef __ANDROID__
+    if (sInBackground && background_ours() && !gPortAppForeground && background_online()) {
+        return; /* (an online match in the background: the events wait until the app is back, see background_hold) */
+    }
+#endif
     while (SDL_PollEvent(&ev)) {
 #ifdef __ANDROID__
         if (ev.type == SDL_EVENT_WILL_ENTER_BACKGROUND || ev.type == SDL_EVENT_DID_ENTER_BACKGROUND) {
             window_away();
+            sInBackground = 1;
             continue;
         }
         if (ev.type == SDL_EVENT_DID_ENTER_FOREGROUND) {
             sWindowBack = 1;
+            sInBackground = 0;
             continue;
         }
 #endif
@@ -784,6 +847,9 @@ static void poll_events(void) {
             GsDraw_FullscreenToggle();
         }
     }
+#ifdef __ANDROID__
+    background_hold(); /* (the app went to the background, not online: the game waits here until it returns) */
+#endif
 }
 
 static int sLastShown = -1; /* the target shown last (the paused picture) */

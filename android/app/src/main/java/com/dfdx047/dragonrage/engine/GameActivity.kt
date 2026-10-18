@@ -50,12 +50,25 @@ class GameActivity : SDLActivity() {
     private val watchMenu = object : Runnable {
         override fun run() {
             pad?.suppressed = TouchBridge.menuOpen()
+            refresh?.follow(EngineNative.interp())
+            gameState?.update()
             handler.postDelayed(this, 100)
         }
     }
 
+    /** The screen's refresh rate while playing ([RefreshRate]; setting dr_refresh). */
+    private var refresh: RefreshRate? = null
+
+    /** The device's heat in the game's log while it runs ([ThermalLog]; with perf_log). */
+    private var thermal: ThermalLog? = null
+
+    /** The game's state told to Android's Game Mode ([GameModeState]; setting dr_game_state). */
+    private var gameState: GameModeState? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         paths = GamePaths(this).also { it.ensure() }
+        var refreshSetting = 0
+        var interp = 0
         // the renderer for this start (Vulkan, or OpenGL ES for Mali when automatic): written before the engine reads it
         runCatching {
             val es = EngineSettings(paths.settings)
@@ -64,12 +77,37 @@ class GameActivity : SDLActivity() {
             val lang = when (resources.configuration.locales[0].language) { "pt" -> 1; "es" -> 2; else -> 0 }
             if (es.get(EngineSettings.LANG, -1) != lang) es.set(EngineSettings.LANG, lang)
             orientation = es.get(EngineSettings.ORIENTATION, 0)
+            refreshSetting = es.get(EngineSettings.REFRESH, 0).coerceIn(0, 3)
+            interp = es.get(EngineSettings.INTERP, 0)
+            if (es.get(EngineSettings.PERF_LOG, 1) != 0) thermal = ThermalLog(this)
+            gameState = GameModeState(this, es.get(EngineSettings.GAME_STATE, 1) != 0)
         }
         requestedOrientation = orientationFlag()
         store = TouchStore(paths.root)
         installDataList()
+        // (before SDL makes its surface: createSDLSurface hands it over)
+        refresh = RefreshRate(this, refreshSetting)
         super.onCreate(savedInstanceState)
+        refresh?.start(interp)
+        gameState?.start()
         addTouchPad()
+    }
+
+    /** SDL's surface, with a second listener of its own: each new or changed surface gets the refresh rate vote again. */
+    override fun createSDLSurface(context: android.content.Context): org.libsdl.app.SDLSurface =
+        super.createSDLSurface(context).also { view ->
+            view.holder.addCallback(object : android.view.SurfaceHolder.Callback {
+                override fun surfaceCreated(holder: android.view.SurfaceHolder) = refresh?.onSurface(holder.surface) ?: Unit
+                override fun surfaceChanged(holder: android.view.SurfaceHolder, format: Int, width: Int, height: Int) =
+                    refresh?.onSurface(holder.surface) ?: Unit
+
+                override fun surfaceDestroyed(holder: android.view.SurfaceHolder) = refresh?.onSurface(null) ?: Unit
+            })
+        }
+
+    override fun onDestroy() {
+        refresh?.stop()
+        super.onDestroy()
     }
 
     /** The player's choice (launcher, Settings): 0 landscape, 1 portrait, 2 as the device is held. */
@@ -110,13 +148,17 @@ class GameActivity : SDLActivity() {
     }
 
     override fun onResume() {
+        EngineNative.setForeground(true) // (before SDL's own resume: the engine looks at the window's events again)
         super.onResume()
         pad?.let { it.config = store.load() }
         handler.post(watchMenu)
+        thermal?.start()
     }
 
     override fun onPause() {
         handler.removeCallbacks(watchMenu)
+        thermal?.stop()
+        EngineNative.setForeground(false)
         TouchBridge.setPad(0, 128, 128, 128, 128)
         super.onPause()
     }

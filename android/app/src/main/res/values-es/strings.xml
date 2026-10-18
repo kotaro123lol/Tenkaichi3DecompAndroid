@@ -155,6 +155,16 @@
     <string name="present_mode">Modo de presentación</string>
     <string name="present_auto">Automático</string>
     <string name="present_mode_text">Cómo llegan las imágenes terminadas a la pantalla. Automático: Mailbox donde el dispositivo lo tenga. FIFO (VSync) espera la actualización de la pantalla: sin tearing, un poco más de latencia, ritmo más estable en algunos dispositivos. Mailbox: sin tearing, sin espera. Immediate: la menor latencia, puede haber tearing. Se aplica la próxima vez que se inicie el juego.</string>
+    <string name="refresh_rate">Frecuencia de la pantalla</string>
+    <string name="refresh_auto">Automática</string>
+    <string name="refresh_keep">No cambiar</string>
+    <string name="refresh_rate_text">La frecuencia que se pide a la pantalla mientras juegas. El juego muestra 30 imágenes por segundo en la pelea: en una pantalla a 90 o 144 Hz unas quedan más tiempo que otras y la imagen tiembla. Automática: 60 Hz, o 120 Hz con movimiento fluido a 120. El sistema aún puede elegir otra frecuencia. Se aplica la próxima vez que se inicie el juego.</string>
+    <string name="adpf">Pistas de rendimiento (ADPF)</string>
+    <string name="adpf_text">El juego le dice a Android cuánto tardó cada imagen y cuánto puede tardar, para que el procesador acelere antes de que la pelea se trabe y baje cuando sobra tiempo (menos calor en sesiones largas). Android 13 o más reciente; en los demás no hace nada. El log dice si el sistema lo aceptó.</string>
+    <string name="game_state">Informar al Modo de juego</string>
+    <string name="game_state_text">Android 13 o más reciente: el sistema sabe cuándo hay una pelea (una en línea no se puede interrumpir) y cuándo estás en los menús, para mantener el dispositivo rápido y con buena respuesta en las peleas. Los modos Rendimiento y Batería del panel de juegos del sistema también funcionan.</string>
+    <string name="bg_pause">Pausar en segundo plano</string>
+    <string name="bg_pause_text">Cuando sales del juego, se detiene con su sonido hasta que vuelves. En una partida en línea sigue corriendo (el juego del rival continúa) y solo deja de dibujar. Con Vulkan; con OpenGL ES, o con esto desactivado, el juego se detiene como antes, partidas en línea incluidas.</string>
     <string name="appearance">Apariencia de la app</string>
     <string name="theme">Tema</string>
     <string name="theme_dark">Oscuro</string>
@@ -320,6 +330,7 @@
     <string name="gpu_opt_blur_far">Desenfoque de distancia apagado</string>
     <string name="gpu_opt_blur_move">Desenfoque de movimiento apagado</string>
     <string name="gpu_opt_filter">Filtro de pantalla bilineal (sin pasada extra)</string>
+    <string name="gpu_opt_filter_gsr">Filtro de pantalla Snapdragon GSR (más nítido en una pantalla grande)</string>
     <string name="frag_depth">Profundidad precisa</string>
     <string name="frag_depth_text">Superposición exacta de superficies en el mismo plano (cascadas, marcas en el suelo). Apagado es más rápido en GPUs débiles, con algún parpadeo raro.</string>
     <string name="frame_skip">Saltar cuadros en vez de ir lento</string>
